@@ -1,11 +1,10 @@
 fs = require "fs"
 tmp = require "tmp"
 cp = require "child_process"
-worker = require "./worker.coffee"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess } = options
+  { input, output, command, separator, nProcess, workerProcess } = options
 
   if separator
     # if .coffee file is passed, execute it
@@ -28,9 +27,28 @@ main = (options)->
     process.nextTick ->
       run separationRule
 
+  if workerProcess
+    worker = (op)->
+      coffeeCommand = [
+        "coffee", __dirname+"/worker.coffee"
+        op.input
+        op.tmpfile
+        "-c","'#{op.command}'"
+        "-s", op.start
+        "-n", op.n
+      ]
+      coffeeCommand.push("-e",op.end) if op.end
+      coffeeCommand.push("-h", op.hStart) if op.hStart?
+      coffeeCommand.push("-H", op.hEnd) if op.hEnd?
+
+      cp.exec coffeeCommand.join(" "), op.callback
+  else
+    worker = require "./worker.coffee"
+
   # running commands as child processes
   tmpfiles = []
   finishProcesses = 0
+
   run = (rule)->
     positions = rule.positions
     tmp.setGracefulCleanup()
@@ -78,6 +96,7 @@ if require.main is module
     .files(0)
     .arglen(1,2)
     .vals("c","command", "s", "sep")
+    .nonvals("w")
     .defaults(p: 4)
     .parse()
   catch e
@@ -97,9 +116,10 @@ if require.main is module
 
 
   main(
-    input     : ap.arg(0)
-    output    : ap.arg(1)
-    nProcess  : ap.opt("p")
-    command   : command
-    separator : ap.opt("sep", "s")
+    input         : ap.arg(0)
+    output        : ap.arg(1)
+    nProcess      : ap.opt("p")
+    command       : command
+    separator     : ap.opt("sep", "s")
+    workerProcess : ap.opt("w")
   )

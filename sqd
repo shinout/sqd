@@ -1,2 +1,2 @@
 #!/bin/sh
-coffee sqd.coffee $@
+coffee sqd.coffee "$@"
