@@ -1,11 +1,10 @@
-#!/usr/local/bin/coffee
-# load modules
 fs = require "fs"
 tmp = require "tmp"
 cp = require "child_process"
 worker = require "./worker.coffee"
 
-execute = (options)->
+# main operation
+main = (options)->
   { input, output, command, separator, nProcess } = options
 
   if separator
@@ -97,7 +96,7 @@ if require.main is module
     process.exit(1)
 
 
-  execute(
+  main(
     input     : ap.arg(0)
     output    : ap.arg(1)
     nProcess  : ap.opt("p")
