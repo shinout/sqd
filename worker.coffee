@@ -1,60 +1,71 @@
 fs = require "fs"
 cp = require "child_process"
 
-# argument definition
-ap = require("argparser")
-.files(0)
-.arglen(2,2)
-.nums("n", "s", "e", "h", "H")
-.vals("c")
-.parse()
+READ_HWM  = 1000000
+WRITE_HWM = 1024 * 1024 * 1024 -1
 
-input = ap.arg(0)
-tmpfile = ap.arg(1)
-start = ap.opt("s")
-end   = ap.opt("e")
-n     = ap.opt("n")
-hStart = ap.opt("h")
-hEnd   = ap.opt("H")
+execute = (options)->
+  {input, tmpfile, command, start, end, n, hStart, hEnd} = options
+  commandArgs = command.split(" ")
+  commandName = commandArgs.shift()
 
-# subcommand
-command = ap.opt("c")
-commandArgs = command.split(" ")
-commandName = commandArgs.shift()
+  rOptions =
+    start : start
+    highWaterMark: READ_HWM
+  rOptions.end = end if end
 
-options =
-  start : start
-  highWaterMark: 1000000
-options.end = end if end
+  worker = cp.spawn(commandName, commandArgs)
+  fwriter = fs.createWriteStream tmpfile, highWaterMark: WRITE_HWM
+  worker.stdout.pipe(fwriter)
+  writer = worker.stdin
 
-worker = cp.spawn(commandName, commandArgs)
-fwriter = fs.createWriteStream tmpfile, highWaterMark: 1024 * 1024 * 1024 -1
-worker.stdout.pipe(fwriter)
-writer = worker.stdin
+  writer.on "close", options.callback if typeof options.callback is "function"
 
-# header
-ok = true
-if (hStart isnt false and hEnd isnt false)
-  fd = fs.openSync(input, "r")
-  buf = new Buffer(hEnd-hStart)
-  fs.readSync(fd, buf, 0, hEnd-hStart, hStart)
-  ok = writer.write(buf)
-  fs.closeSync(fd)
+  # header
+  ok = true
+  if (hStart? and hEnd? and hStart isnt false and hEnd isnt false)
+    fd = fs.openSync(input, "r")
+    buf = new Buffer(hEnd-hStart)
+    fs.readSync(fd, buf, 0, hEnd-hStart, hStart)
+    ok = writer.write(buf)
+    fs.closeSync(fd)
 
-# body
+  # body
+  beginReadingBody = ->
+    freader = fs.createReadStream input, rOptions
 
-beginReadingBody = ->
-  freader = fs.createReadStream input, options
+    freader.on "data", (chunk)->
+      ok = writer.write chunk
+      if not ok
+        freader.pause()
+        writer.once "drain", -> freader.resume()
 
-  freader.on "data", (chunk)->
-    ok = writer.write chunk
-    if not ok
-      freader.pause()
-      writer.once "drain", -> freader.resume()
+    freader.on "end", -> writer.end()
 
-  freader.on "end", -> writer.end()
+  if ok
+    beginReadingBody()
+  else
+    writer.once "drain", beginReadingBody
 
-if ok
-  beginReadingBody()
-else
-  writer.once "drain", beginReadingBody
+module.exports = execute
+
+if require.main is module
+  # argument definition
+  ap = require("argparser")
+  .files(0)
+  .arglen(2,2)
+  .nums("n", "s", "e", "h", "H")
+  .vals("c")
+  .parse()
+
+  op =
+    input   : ap.arg(0)
+    tmpfile : ap.arg(1)
+    command : ap.opt("c")
+    start   : ap.opt("s")
+    end     : ap.opt("e")
+    n       : ap.opt("n")
+    hStart  : ap.opt("h")
+    hEnd    : ap.opt("H")
+
+  execute(op)

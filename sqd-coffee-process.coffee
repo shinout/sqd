@@ -4,7 +4,6 @@ fs = require "fs"
 tmp = require "tmp"
 tmp.setGracefulCleanup()
 cp = require "child_process"
-worker = require "./worker.coffee"
 
 # argument definition
 ap = require("argparser")
@@ -17,6 +16,8 @@ ap = require("argparser")
 
 # subcommand
 command = ap.opt("command", "c")
+commandArgs = command.split(" ")
+commandName = commandArgs.shift()
 
 # other arguments
 nProcess = ap.opt("p") or 4
@@ -56,22 +57,27 @@ run = (rule)->
       tmp.tmpName (e, path)->
         tmpfiles[p] = path
 
-        worker(
-          input   : input
-          tmpfile : path
-          command : command
-          start   : positions[p]
-          end     : if p+1 isnt nProcess then positions[p+1]-1 else null
-          n       : p
-          hStart  : rule.header?[0]
-          hEnd    : rule.header?[1]
-          callback: ()->
-            finishProcesses++
-            if finishProcesses is nProcess
-              console.timeEnd "time"
-              cat = cp.spawn "cat", tmpfiles
-              wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
-              cat.stdout.pipe wstream
-      )
+        coffeeCommand = [
+          "coffee", __dirname+"/worker.coffee"
+          input
+          path
+          "-c","'#{command}'"
+          "-s", positions[p]
+          "-n", p
+        ]
+        coffeeCommand.push("-e",positions[p+1]-1) unless p+1 is nProcess
+        if rule.header
+          coffeeCommand.push("-h", rule.header[0])
+          coffeeCommand.push("-H", rule.header[1])
+
+        cp.exec coffeeCommand.join(" "), (e, stdout, stderr)->
+          # console.log stdout
+          # console.error stderr
+          finishProcesses++
+          if finishProcesses is nProcess
+            console.timeEnd "time"
+            cat = cp.spawn "cat", tmpfiles
+            wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
+            cat.stdout.pipe wstream
 
 console.time "time"
