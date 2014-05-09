@@ -4,7 +4,7 @@ cp = require "child_process"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess } = options
+  { input, output, command, separator, nProcess, workerProcess, onClose } = options
 
   if separator
     # if .coffee file is passed, execute it
@@ -69,13 +69,15 @@ main = (options)->
             callback: ()->
               finishProcesses++
               if finishProcesses is nProcess
-                console.timeEnd "time"
                 cat = cp.spawn "cat", tmpfiles
                 wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
                 cat.stdout.pipe wstream
+                wstream.on "close", ->
+                  unlinkCounter = 0
+                  cb = -> onClose() if ++unlinkCounter is nProcess
+                  fs.unlink tmpfile, cb for tmpfile in tmpfiles
         )
 
-  console.time "time"
 
 showUsage = ->
   console.error """
@@ -113,7 +115,8 @@ if require.main is module
     console.error '[ERROR]: -c "<command>" is required'
     showUsage()
     process.exit(1)
-
+  
+  startTime = new Date().getTime()
 
   main(
     input         : ap.arg(0)
@@ -122,4 +125,7 @@ if require.main is module
     command       : command
     separator     : ap.opt("sep", "s")
     workerProcess : ap.opt("w")
+    onClose       : ->
+      endTime = new Date().getTime()
+      console.error "time: %dms", endTime - startTime
   )
