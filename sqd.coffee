@@ -4,27 +4,22 @@ cp = require "child_process"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess, onClose } = options
+  { input, output, command, separator, nProcess, workerProcess, startTime, onClose } = options
 
-  if separator
-    # if .coffee file is passed, execute it
-    if separator.slice(-7) is ".coffee" and not separator.match(" ")
-      separationOpearator = require separator
-      separationRule = separationOpearator input, nProcess
-      process.nextTick ->
-        run separationRule
-
-    # if command is passed, execute it and parse the result
-    else
-      sepcommand = [separator, input, nProcess].join(" ")
-      cp.exec sepCommand, (e, stdout, stderr)->
-        separationRule = JSON.parse(stdout)
-        run separationRule
-  else
-    # default separation rule: line separator
-    lineSeparator = require(__dirname + "/line_separator.coffee") unless separator
-    separationRule = lineSeparator input, nProcess
+  separator = "line" if not separator
+  # if .coffee file is passed, execute it
+  separatorAsCoffee = "#{__dirname}/#{separator}_separator.coffee"
+  if fs.existsSync separatorAsCoffee
+    separationOpearator = require separatorAsCoffee
+    separationRule = separationOpearator input, nProcess
     process.nextTick ->
+      run separationRule
+
+  # if command is passed, execute it and parse the result
+  else
+    sepcommand = [separator, input, nProcess].join(" ")
+    cp.exec sepCommand, (e, stdout, stderr)->
+      separationRule = JSON.parse(stdout)
       run separationRule
 
   if workerProcess
@@ -50,6 +45,7 @@ main = (options)->
   finishProcesses = 0
 
   run = (rule)->
+    console.error "after separator: %dms", new Date().getTime() - startTime
     positions = rule.positions
     tmp.setGracefulCleanup()
     for k in [0...nProcess]
@@ -68,6 +64,7 @@ main = (options)->
             hEnd    : rule.header?[1]
             callback: ()->
               finishProcesses++
+              console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
               if finishProcesses is nProcess
                 cat = cp.spawn "cat", tmpfiles
                 wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
@@ -125,7 +122,7 @@ if require.main is module
     command       : command
     separator     : ap.opt("sep", "s")
     workerProcess : ap.opt("w")
+    startTime     : startTime
     onClose       : ->
-      endTime = new Date().getTime()
-      console.error "time: %dms", endTime - startTime
+      console.error "time: %dms", new Date().getTime() - startTime
   )

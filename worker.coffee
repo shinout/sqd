@@ -5,7 +5,7 @@ READ_HWM  = 1000000
 WRITE_HWM = 1024 * 1024 * 1024 -1
 
 execute = (options)->
-  {input, tmpfile, command, start, end, n, hStart, hEnd} = options
+  {input, tmpfile, command, start, end, n, hStart, hEnd } = options
   commandArgs = command.split(" ")
   commandName = commandArgs.shift()
 
@@ -19,7 +19,7 @@ execute = (options)->
   worker.stdout.pipe(fwriter)
   writer = worker.stdin
 
-  writer.on "close", options.callback if typeof options.callback is "function"
+  fwriter.on "close", options.callback if typeof options.callback is "function"
 
   # header
   ok = true
@@ -35,8 +35,8 @@ execute = (options)->
     freader = fs.createReadStream input, rOptions
 
     freader.on "data", (chunk)->
-      ok = writer.write chunk
-      if not ok
+      writable = writer.write chunk
+      if not writable
         freader.pause()
         writer.once "drain", -> freader.resume()
 

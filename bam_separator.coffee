@@ -16,7 +16,7 @@ module.exports = (bamfile, nProcess)->
   cdataLen = headerBuf.readUInt16LE(16)- 25
   offset = cdataLen+26
   headerBuf = headerBuf.slice(0, offset)
-  interval = Math.floor(size-offset/nProcess)
+  interval = Math.floor((size-offset)/nProcess)
   positions = []
 
   for k in [0...nProcess]
@@ -39,5 +39,7 @@ module.exports = (bamfile, nProcess)->
     positions.push(start + cursor)
 
   fs.closeSync(fd)
-  header: [0, offset]
+  header   : [0, offset]
   positions: positions
+  size     : size
+  interval : interval
