@@ -43,3 +43,8 @@ module.exports = (bamfile, nProcess)->
   positions: positions
   size     : size
   interval : interval
+
+if require.main is module
+    n = Number process.argv[3]
+    n = 4 if isNaN n
+    console.log JSON.stringify module.exports process.argv[2], n
