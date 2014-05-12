@@ -19,7 +19,7 @@ showStderr = (stderr, name, exit)->
     process.exit() if exit
 
 execute = (options)->
-  {input, tmpfile, command, start, end, n, hStart, hEnd } = options
+  {input, tmpfile, command, start, end, n, hStart, hEnd, debug } = options
   commandArgs = command.split(" ")
   commandName = commandArgs.shift()
 
@@ -82,6 +82,7 @@ if require.main is module
   .arglen(2,2)
   .nums("n", "s", "e", "h", "H")
   .vals("c")
+  .nonvals("debug", "d")
   .parse()
 
   op =
@@ -93,5 +94,6 @@ if require.main is module
     n       : ap.opt("n")
     hStart  : ap.opt("h")
     hEnd    : ap.opt("H")
+    debug   : ap.opt("d", "debug")
 
   execute(op)

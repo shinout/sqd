@@ -4,7 +4,7 @@ cp = require "child_process"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess, startTime, onClose } = options
+  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug } = options
 
   separator = "line" if not separator
   # if .js file is passed, execute it
@@ -45,7 +45,7 @@ main = (options)->
   finishProcesses = 0
 
   run = (rule)->
-    console.error "after separator: %dms", new Date().getTime() - startTime
+    debug and console.error "after separator: %dms", new Date().getTime() - startTime
     positions = rule.positions
     tmp.setGracefulCleanup()
     for k in [0...nProcess]
@@ -64,7 +64,7 @@ main = (options)->
             hEnd    : rule.header?[1]
             callback: ()->
               finishProcesses++
-              console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
+              debug and console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
               if finishProcesses is nProcess
                 cat = cp.spawn "cat", tmpfiles
                 wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
@@ -115,7 +115,7 @@ exports.run = ->
     .files(0)
     .arglen(1,2)
     .vals("c","command", "s", "sep")
-    .nonvals("w")
+    .nonvals("w", "debug", "d")
     .defaults(p: 4)
     .parse()
   catch e
@@ -143,8 +143,9 @@ exports.run = ->
     separator     : ap.opt("sep", "s")
     workerProcess : ap.opt("w")
     startTime     : startTime
+    debug         : ap.opt("debug", "d")
     onClose       : ->
-      console.error "time: %dms", new Date().getTime() - startTime
+      ap.opt("debug", "d") and console.error "time: %dms", new Date().getTime() - startTime
   )
 
 exports.run() if require.main is module
