@@ -45,7 +45,10 @@ main = (options)->
   finishProcesses = 0
 
   run = (rule)->
-    debug and console.error "after separator: %dms", new Date().getTime() - startTime
+    if debug
+      console.error "after separator: %dms", new Date().getTime() - startTime
+      console.error "[separation rules]"
+      console.error JSON.stringify rule
     positions = rule.positions
     tmp.setGracefulCleanup()
     for k in [0...nProcess]
