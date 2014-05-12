@@ -10,7 +10,6 @@ executing unix commands with multi processes
 installation
 ----------------
 ```bash
-$ npm install -g coffee-script #if you don't have one
 $ npm install -g sqd
 ```
 
