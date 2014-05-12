@@ -29,17 +29,22 @@ execute = (options)->
   rOptions.end = end if end
 
   worker = cp.spawn(commandName, commandArgs)
-  fwriter = fs.createWriteStream tmpfile, highWaterMark: WRITE_HWM
 
   # registering error
   worker.stdout.on "error", error "givenCommand#{n}.stdout"
   worker.stdin.on "error", error "givenCommand#{n}.stdin"
   showStderr worker.stderr, "givenCommand#{n}", true
 
-  worker.stdout.pipe(fwriter)
-  writer = worker.stdin
+  if tmpfile is "-"
+    fwriter = process.stdout
+    worker.stdout.on "end", options.callback if typeof options.callback is "function"
+    worker.stdout.pipe fwriter, end: false
+  else
+    fwriter = fs.createWriteStream tmpfile, highWaterMark: WRITE_HWM
+    fwriter.on "close", options.callback if typeof options.callback is "function"
+    worker.stdout.pipe fwriter
 
-  fwriter.on "close", options.callback if typeof options.callback is "function"
+  writer = worker.stdin
 
   # header
   ok = true

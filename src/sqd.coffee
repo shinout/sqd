@@ -51,11 +51,11 @@ main = (options)->
     for k in [0...nProcess]
       do (n = k)->
         tmp.tmpName (e, path)->
-          tmpfiles[n] = path
+          tmpfiles.push path if n isnt 0
 
           worker(
             input   : input
-            tmpfile : path
+            tmpfile : if n is 0 then (if output then output else "-") else path # write to output file when n is 0
             command : command
             start   : positions[n]
             end     : if n+1 isnt nProcess then positions[n+1]-1 else null
@@ -67,7 +67,7 @@ main = (options)->
               console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
               if finishProcesses is nProcess
                 cat = cp.spawn "cat", tmpfiles
-                wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
+                wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
 
                 showStderr cat.stderr, "cat"
                 wstream.on "error", (e)-> error "outputStream"

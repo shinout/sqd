@@ -1,6 +1,6 @@
 {
   "name": "sqd",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "executing unix commands with multi processes",
   "main": "lib/sqd.js",
   "bin": {
