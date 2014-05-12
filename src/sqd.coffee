@@ -51,7 +51,9 @@ main = (options)->
     for k in [0...nProcess]
       do (n = k)->
         tmp.tmpName (e, path)->
-          tmpfiles.push path if n isnt 0
+          if n isnt 0
+            tmpfiles.push path
+            debug and console.error "using tmp file: #{path}"
 
           worker(
             input   : input
