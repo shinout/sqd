@@ -7,10 +7,10 @@ main = (options)->
   { input, output, command, separator, nProcess, workerProcess, startTime, onClose } = options
 
   separator = "line" if not separator
-  # if .coffee file is passed, execute it
-  separatorAsCoffee = "#{__dirname}/#{separator}_separator.coffee"
-  if fs.existsSync separatorAsCoffee
-    separationOpearator = require separatorAsCoffee
+  # if .js file is passed, execute it
+  separatorAsJS = "#{__dirname}/#{separator}_separator.js"
+  if fs.existsSync separatorAsJS
+    separationOpearator = require separatorAsJS
     separationRule = separationOpearator input, nProcess
     process.nextTick ->
       run separationRule
@@ -24,21 +24,21 @@ main = (options)->
 
   if workerProcess
     worker = (op)->
-      coffeeCommand = [
-        "coffee", __dirname+"/worker.coffee"
+      jsCommand = [
+        "node", __dirname+"/worker.js"
         op.input
         op.tmpfile
         "-c","'#{op.command}'"
         "-s", op.start
         "-n", op.n
       ]
-      coffeeCommand.push("-e",op.end) if op.end
-      coffeeCommand.push("-h", op.hStart) if op.hStart?
-      coffeeCommand.push("-H", op.hEnd) if op.hEnd?
+      jsCommand.push("-e",op.end) if op.end
+      jsCommand.push("-h", op.hStart) if op.hStart?
+      jsCommand.push("-H", op.hEnd) if op.hEnd?
 
-      cp.exec coffeeCommand.join(" "), op.callback
+      cp.exec jsCommand.join(" "), op.callback
   else
-    worker = require "./worker.coffee"
+    worker = require "./worker.js"
 
   # running commands as child processes
   tmpfiles = []
@@ -88,7 +88,7 @@ showUsage = ->
 
 """
 
-if require.main is module
+exports.run = ->
   # argument definition
   try
     ap = require("argparser")
@@ -126,3 +126,5 @@ if require.main is module
     onClose       : ->
       console.error "time: %dms", new Date().getTime() - startTime
   )
+
+exports.run() if require.main is module

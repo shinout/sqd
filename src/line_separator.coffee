@@ -7,7 +7,8 @@ module.exports = (file, num)->
   fd = fs.openSync file, "r"
 
   for k in [1...num]
-    start = interval * k
+    prev = positions[k-1] or -1
+    start = Math.max(interval * k, prev)
 
     while start <= size
       buf = new Buffer(MEAN_LINE_LEN)
@@ -21,3 +22,8 @@ module.exports = (file, num)->
   header   : null
   footer   : null
   positions: positions
+
+if require.main is module
+    n = Number process.argv[3]
+    n = 4 if isNaN n
+    console.log JSON.stringify module.exports process.argv[2], n
