@@ -83,8 +83,9 @@ main = (options)->
                   cat.stdout.pipe wstream
 
                   wstream.on "close", ->
-                    unlinkCounter = 0
-                    cb = -> onClose() if ++unlinkCounter is nProcess and typeof onClose is "function"
+                    unlinkCounter = 1
+                    cb = ->
+                      onClose() if ++unlinkCounter is nProcess
                     fs.unlink tmpfile, cb for tmpfile in tmpfiles
                 else
                   onClose() if typeof onClose is "function"
@@ -143,6 +144,7 @@ exports.run = ->
     process.exit(1)
   
   startTime = new Date().getTime()
+  debug = ap.opt("debug", "d")
 
   main(
     input         : ap.arg(0)
@@ -152,9 +154,9 @@ exports.run = ->
     separator     : ap.opt("sep", "s")
     workerProcess : ap.opt("w")
     startTime     : startTime
-    debug         : ap.opt("debug", "d")
+    debug         : debug
     onClose       : ->
-      ap.opt("debug", "d") and console.error "time: %dms", new Date().getTime() - startTime
+      debug and console.error "time: %dms", new Date().getTime() - startTime
   )
 
 exports.run() if require.main is module
