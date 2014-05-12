@@ -68,12 +68,32 @@ main = (options)->
               if finishProcesses is nProcess
                 cat = cp.spawn "cat", tmpfiles
                 wstream = if output then fs.createWriteStream output, highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
+
+                showStderr cat.stderr, "cat"
+                wstream.on "error", (e)-> error "outputStream"
+                cat.stdout.on "error", (e)-> error "cat.stdout"
+                cat.stdin.on "error", (e)-> error "cat.stdin"
+
                 cat.stdout.pipe wstream
+
                 wstream.on "close", ->
                   unlinkCounter = 0
                   cb = -> onClose() if ++unlinkCounter is nProcess
                   fs.unlink tmpfile, cb for tmpfile in tmpfiles
         )
+
+error = (streamName, end)->
+  return (e)->
+    console.error "[ERROR] #{streamName} :"
+    console.error e.stack
+    process.exit() if end
+
+showStderr = (stderr, name)->
+  return if stderr is process.stderr
+  stderr.setEncoding "utf-8"
+  stderr.on "data", (data)->
+    console.error "STDERR in #{name}:"
+    console.error data
 
 
 showUsage = ->

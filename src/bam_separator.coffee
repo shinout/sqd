@@ -21,7 +21,7 @@ module.exports = (bamfile, nProcess)->
 
   for k in [0...nProcess]
     # finding accurate position of BGZF
-    start = interval * k + offset
+    start = interval * k + offset-1
     buf = new Buffer(BGZF_MEAN_LEN)
     fs.read fd, buf, 0, BGZF_MEAN_LEN, start
     cursor = -1

@@ -4,6 +4,20 @@ cp = require "child_process"
 READ_HWM  = 1000000
 WRITE_HWM = 1024 * 1024 * 1024 -1
 
+error = (streamName, exit)->
+  return (e)->
+    console.error "[ERROR] #{streamName} :"
+    console.error e.stack
+    process.exit() if exit
+
+showStderr = (stderr, name, exit)->
+  return if stderr is process.stderr
+  stderr.setEncoding "utf-8"
+  stderr.on "data", (data)->
+    console.error "STDERR in #{name}:"
+    console.error data
+    process.exit() if exit
+
 execute = (options)->
   {input, tmpfile, command, start, end, n, hStart, hEnd } = options
   commandArgs = command.split(" ")
@@ -16,6 +30,12 @@ execute = (options)->
 
   worker = cp.spawn(commandName, commandArgs)
   fwriter = fs.createWriteStream tmpfile, highWaterMark: WRITE_HWM
+
+  # registering error
+  worker.stdout.on "error", error "givenCommand#{n}.stdout"
+  worker.stdin.on "error", error "givenCommand#{n}.stdin"
+  showStderr worker.stderr, "givenCommand#{n}", true
+
   worker.stdout.pipe(fwriter)
   writer = worker.stdin
 
@@ -33,6 +53,7 @@ execute = (options)->
   # body
   beginReadingBody = ->
     freader = fs.createReadStream input, rOptions
+    #freader.pipe writer
 
     freader.on "data", (chunk)->
       writable = writer.write chunk
