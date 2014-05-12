@@ -1,0 +1,147 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'publish', '.' ]
+2 info using npm@1.4.3
+3 info using node@v0.10.26
+4 verbose publish [ '.' ]
+5 verbose cache add [ '.', null ]
+6 verbose cache add name=undefined spec="." args=[".",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: '.',
+7 verbose parsed url   path: '.',
+7 verbose parsed url   href: '.' }
+8 silly lockFile 3a52ce78- .
+9 verbose lock . /Users/nagalab/.npm/3a52ce78-.lock
+10 verbose tar pack [ '/var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz',
+10 verbose tar pack   '.' ]
+11 verbose tarball /var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+12 verbose folder .
+13 info prepublish sqd@0.0.1
+14 silly lockFile 1f1177db-tar tar://.
+15 verbose lock tar://. /Users/nagalab/.npm/1f1177db-tar.lock
+16 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+17 verbose lock tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz /Users/nagalab/.npm/de278ae8-51250-0-7345227368641645-tmp-tgz.lock
+18 silly lockFile 1f1177db-tar tar://.
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+21 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+22 verbose tar unpack /var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+23 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+24 verbose lock tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package /Users/nagalab/.npm/d25e6ff7-51250-0-7345227368641645-package.lock
+25 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+26 verbose lock tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz /Users/nagalab/.npm/de278ae8-51250-0-7345227368641645-tmp-tgz.lock
+27 silly gunzTarPerm modes [ '755', '644' ]
+28 silly gunzTarPerm extractEntry package.json
+29 silly gunzTarPerm extractEntry .npmignore
+30 silly gunzTarPerm extractEntry README.md
+31 silly gunzTarPerm extractEntry Gruntfile.coffee
+32 silly gunzTarPerm extractEntry bin/sqd
+33 silly gunzTarPerm extractEntry lib/bam_separator.js
+34 silly gunzTarPerm extractEntry lib/line_separator.js
+35 silly gunzTarPerm extractEntry lib/sqd.js
+36 silly gunzTarPerm extractEntry lib/worker.js
+37 silly gunzTarPerm extractEntry src/bam_separator.coffee
+38 silly gunzTarPerm extractEntry src/line_separator.coffee
+39 silly gunzTarPerm extractEntry src/sqd.coffee
+40 silly gunzTarPerm extractEntry src/worker.coffee
+41 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+42 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+43 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+44 silly lockFile de278ae8-51250-0-7345227368641645-tmp-tgz tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/tmp.tgz
+45 verbose tar pack [ '/Users/nagalab/.npm/sqd/0.0.1/package.tgz',
+45 verbose tar pack   '/var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package' ]
+46 verbose tarball /Users/nagalab/.npm/sqd/0.0.1/package.tgz
+47 verbose folder /var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+48 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+49 verbose lock tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package /Users/nagalab/.npm/d25e6ff7-51250-0-7345227368641645-package.lock
+50 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+51 verbose lock tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz /Users/nagalab/.npm/3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz.lock
+52 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+53 silly lockFile d25e6ff7-51250-0-7345227368641645-package tar:///var/folders/6_/v1jmly5n577dq3htq2fcv_800000gn/T/npm-21816-2zW7ha6T/1399891351250-0.7345227368641645/package
+54 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+55 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+56 silly lockFile 2260fc38-rs-nagalab-npm-sqd-0-0-1-package /Users/nagalab/.npm/sqd/0.0.1/package
+57 verbose lock /Users/nagalab/.npm/sqd/0.0.1/package /Users/nagalab/.npm/2260fc38-rs-nagalab-npm-sqd-0-0-1-package.lock
+58 silly lockFile 2260fc38-rs-nagalab-npm-sqd-0-0-1-package /Users/nagalab/.npm/sqd/0.0.1/package
+59 silly lockFile 2260fc38-rs-nagalab-npm-sqd-0-0-1-package /Users/nagalab/.npm/sqd/0.0.1/package
+60 verbose tar unpack /Users/nagalab/.npm/sqd/0.0.1/package.tgz
+61 silly lockFile a77d78a5-rs-nagalab-npm-sqd-0-0-1-package tar:///Users/nagalab/.npm/sqd/0.0.1/package
+62 verbose lock tar:///Users/nagalab/.npm/sqd/0.0.1/package /Users/nagalab/.npm/a77d78a5-rs-nagalab-npm-sqd-0-0-1-package.lock
+63 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+64 verbose lock tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz /Users/nagalab/.npm/3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz.lock
+65 silly gunzTarPerm modes [ '755', '644' ]
+66 silly gunzTarPerm extractEntry package.json
+67 silly gunzTarPerm extractEntry .npmignore
+68 silly gunzTarPerm extractEntry README.md
+69 silly gunzTarPerm extractEntry Gruntfile.coffee
+70 silly gunzTarPerm extractEntry bin/sqd
+71 silly gunzTarPerm extractEntry lib/bam_separator.js
+72 silly gunzTarPerm extractEntry lib/line_separator.js
+73 silly gunzTarPerm extractEntry lib/sqd.js
+74 silly gunzTarPerm extractEntry lib/worker.js
+75 silly gunzTarPerm extractEntry src/bam_separator.coffee
+76 silly gunzTarPerm extractEntry src/line_separator.coffee
+77 silly gunzTarPerm extractEntry src/sqd.coffee
+78 silly gunzTarPerm extractEntry src/worker.coffee
+79 silly lockFile a77d78a5-rs-nagalab-npm-sqd-0-0-1-package tar:///Users/nagalab/.npm/sqd/0.0.1/package
+80 silly lockFile a77d78a5-rs-nagalab-npm-sqd-0-0-1-package tar:///Users/nagalab/.npm/sqd/0.0.1/package
+81 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+82 silly lockFile 3fccf7ff-agalab-npm-sqd-0-0-1-package-tgz tar:///Users/nagalab/.npm/sqd/0.0.1/package.tgz
+83 verbose chmod /Users/nagalab/.npm/sqd/0.0.1/package.tgz 644
+84 verbose chown /Users/nagalab/.npm/sqd/0.0.1/package.tgz [ 501, 20 ]
+85 silly lockFile 3a52ce78- .
+86 silly lockFile 3a52ce78- .
+87 silly publish { name: 'sqd',
+87 silly publish   version: '0.0.1',
+87 silly publish   description: 'executing unix commands with multi processes',
+87 silly publish   main: 'lib/sqd.js',
+87 silly publish   bin: { sqd: './bin/sqd' },
+87 silly publish   repository: { type: 'git', url: 'github:shinout/sqd.git' },
+87 silly publish   keywords: [ 'multi', 'proccess', 'command', 'unix' ],
+87 silly publish   author: { name: 'SHIN Suzuki' },
+87 silly publish   dependencies: { argparser: '>= 0.2.2', tmp: '>= 0.0.23' },
+87 silly publish   devDependencies:
+87 silly publish    { 'coffee-script': '>= 1.7.1',
+87 silly publish      grunt: '^0.4.4',
+87 silly publish      'grunt-contrib-coffee': '^0.10.1' },
+87 silly publish   license: 'ISC',
+87 silly publish   readme: 'SQD\n==========\n- SQD: Simple Query Divider\n- SQD: SeQuential Distributor\n- SQD: Super-Quick Disposer\n- SQD: SQuiD-like multi-processor\n\nexecuting unix commands with multi processes\n\ninstallation\n----------------\n```bash\n$ npm install -g coffee-script #if you don\'t have one\n$ npm install -g sqd\n```\n\nusage\n-------------\n```bash\n$ sqd -c command [-p #process] [-s separator_command] <input file> [output file]\n```\n\ngrep with 8 processes\n\n```bash\nsqd -c "grep -e something" -p 8 input.txt\n```\nresults are on STDOUT.\n\n\nsed with 4 processes (default), results to output.txt\n\n```bash\nsqd -c "sed -e y/ATCG/atcg/" input.txt output.txt\n```\n\nwith separator option, we can also handle binary files\n```bash\nsqd -c "samtools view -" -s bam input.bam\n```\n',
+87 silly publish   readmeFilename: 'README.md',
+87 silly publish   _id: 'sqd@0.0.1',
+87 silly publish   _from: '.',
+87 silly publish   dist: { shasum: 'b17e763b48de9fd9788a32614428d915ac3c1ab1' } }
+88 verbose url raw sqd
+89 verbose url resolving [ 'https://registry.npmjs.org/', './sqd' ]
+90 verbose url resolved https://registry.npmjs.org/sqd
+91 info trying registry request attempt 1 at 19:42:31
+92 http PUT https://registry.npmjs.org/sqd
+93 http 403 https://registry.npmjs.org/sqd
+94 error publish Failed PUT 403
+95 error Error: forbidden cannot modify pre-existing version: 0.0.1
+95 error old={"name":"sqd","version":"0.0.1","description":"executing unix commands with multi processes","main":"lib/sqd.js","bin":{"sqd":"./bin/sqd"},"repository":{"type":"git","url":"github:shinout/sqd.git"},"keywords":["multi","proccess","command","unix"],"author":{"name":"SHIN Suzuki"},"dependencies":{"argparser":">= 0.2.2","tmp":">= 0.0.23"},"devDependencies":{"coffee-script":">= 1.7.1","grunt":"^0.4.4","grunt-contrib-coffee":"^0.10.1"},"license":"ISC","_id":"sqd@0.0.1","_from":".","dist":{"shasum":"153cc237e191e472f60ad6cbc6ecee1d1c5fcedd","tarball":"http://registry.npmjs.org/sqd/-/sqd-0.0.1.tgz"},"_npmVersion":"1.4.3","_npmUser":{"name":"shinout","email":"shinout310@gmail.com"},"maintainers":[{"name":"shinout","email":"shinout310@gmail.com"}]}
+95 error new={"name":"sqd","version":"0.0.1","description":"executing unix commands with multi processes","main":"lib/sqd.js","bin":{"sqd":"./bin/sqd"},"repository":{"type":"git","url":"github:shinout/sqd.git"},"keywords":["multi","proccess","command","unix"],"author":{"name":"SHIN Suzuki"},"dependencies":{"argparser":">= 0.2.2","tmp":">= 0.0.23"},"devDependencies":{"coffee-script":">= 1.7.1","grunt":"^0.4.4","grunt-contrib-coffee":"^0.10.1"},"license":"ISC","readme":"SQD\u000a==========\u000a- SQD: Simple Query Divider\u000a- SQD: SeQuential Distributor\u000a- SQD: Super-Quick Disposer\u000a- SQD: SQuiD-like multi-processor\u000a\u000aexecuting unix commands with multi processes\u000a\u000ainstallation\u000a----------------\u000a```bash\u000a$ npm install -g coffee-script #if you don't have one\u000a$ npm install -g sqd\u000a```\u000a\u000ausage\u000a-------------\u000a```bash\u000a$ sqd -c command [-p #process] [-s separator_command] <input file> [output file]\u000a```\u000a\u000agrep with 8 processes\u000a\u000a```bash\u000asqd -c \"grep -e something\" -p 8 input.txt\u000a```\u000aresults are on STDOUT.\u000a\u000a\u000ased with 4 processes (default), results to output.txt\u000a\u000a```bash\u000asqd -c \"sed -e y/ATCG/atcg/\" input.txt output.txt\u000a```\u000a\u000awith separator option, we can also handle binary files\u000a```bash\u000asqd -c \"samtools view -\" -s bam input.bam\u000a```\u000a","readmeFilename":"README.md","_id":"sqd@0.0.1","_from":".","dist":{"shasum":"b17e763b48de9fd9788a32614428d915ac3c1ab1","tarball":"http://registry.npmjs.org/sqd/-/sqd-0.0.1.tgz"},"_npmVersion":"1.4.3","_npmUser":{"name":"shinout","email":"shinout310@gmail.com"},"maintainers":[{"name":"shinout","email":"shinout310@gmail.com"}]}: sqd
+95 error     at RegClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:237:14)
+95 error     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:123:22)
+95 error     at Request.EventEmitter.emit (events.js:98:17)
+95 error     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:893:14)
+95 error     at Request.EventEmitter.emit (events.js:117:20)
+95 error     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:844:12)
+95 error     at IncomingMessage.EventEmitter.emit (events.js:117:20)
+95 error     at _stream_readable.js:920:16
+95 error     at process._tickCallback (node.js:415:13)
+96 error If you need help, you may report this *entire* log,
+96 error including the npm and node versions, at:
+96 error     <http://github.com/npm/npm/issues>
+97 error System Darwin 13.1.0
+98 error command "/usr/local/bin/node" "/usr/local/bin/npm" "publish" "."
+99 error cwd /Users/nagalab/node_modules/selfpackages/sqd
+100 error node -v v0.10.26
+101 error npm -v 1.4.3
+102 verbose exit [ 1, true ]
