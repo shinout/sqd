@@ -4,7 +4,7 @@ cp = require "child_process"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug } = options
+  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug, stop } = options
 
   separator = "line" if not separator
   # if .js file is passed, execute it
@@ -67,6 +67,7 @@ main = (options)->
             n       : n
             hStart  : rule.header?[0]
             hEnd    : rule.header?[1]
+            stop    : stop
             callback: ()->
               finishProcesses++
               debug and console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
@@ -76,9 +77,9 @@ main = (options)->
                   wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
 
                   showStderr cat.stderr, "cat"
-                  wstream.on "error", (e)-> error "outputStream"
-                  cat.stdout.on "error", (e)-> error "cat.stdout"
-                  cat.stdin.on "error", (e)-> error "cat.stdin"
+                  wstream.on "error", (e)-> error "outputStream", stop
+                  cat.stdout.on "error", (e)-> error "cat.stdout", stop
+                  cat.stdin.on "error", (e)-> error "cat.stdin", stop
 
                   cat.stdout.pipe wstream
 
@@ -92,25 +93,26 @@ main = (options)->
 
         )
 
-error = (streamName, end)->
+error = (streamName, exit)->
   return (e)->
     console.error "[ERROR] #{streamName} :"
     console.error e.stack
-    process.exit() if end
+    process.exit(1) if exit
 
-showStderr = (stderr, name)->
+showStderr = (stderr, name, exit)->
   return if stderr is process.stderr
   stderr.setEncoding "utf-8"
   stderr.on "data", (data)->
     console.error "STDERR in #{name}:"
     console.error data
+    process.exit(1) if exit
 
 
 showUsage = ->
   console.error """
 
   [USAGE]
-  \tsqd -c command [-p #process] [-s separator_command] <input file> [output file]
+  \tsqd -c command [--debug] [--exit] [-p #process] [-s separator_command] <input file> [output file]
 
   \tcommand:\t\t a unix command to be multiply executed from stream of the given input file
   \tseparator_command:\t command which gives a set of information of separation of the given input file.
@@ -125,7 +127,7 @@ exports.run = ->
     .files(0)
     .arglen(1,2)
     .vals("c","command", "s", "sep")
-    .nonvals("w", "debug", "d")
+    .nonvals("w", "debug", "d", "e", "exit")
     .defaults(p: 4)
     .parse()
   catch e
@@ -155,6 +157,7 @@ exports.run = ->
     workerProcess : ap.opt("w")
     startTime     : startTime
     debug         : debug
+    stop          : ap.opt("e", "exit")
     onClose       : ->
       debug and console.error "time: %dms", new Date().getTime() - startTime
   )

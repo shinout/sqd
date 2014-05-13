@@ -8,7 +8,7 @@ error = (streamName, exit)->
   return (e)->
     console.error "[ERROR] #{streamName} :"
     console.error e.stack
-    process.exit() if exit
+    process.exit(1) if exit
 
 showStderr = (stderr, name, exit)->
   return if stderr is process.stderr
@@ -16,10 +16,10 @@ showStderr = (stderr, name, exit)->
   stderr.on "data", (data)->
     console.error "STDERR in #{name}:"
     console.error data
-    process.exit() if exit
+    process.exit(1) if exit
 
 execute = (options)->
-  {input, tmpfile, command, start, end, n, hStart, hEnd, debug } = options
+  {input, tmpfile, command, start, end, n, hStart, hEnd, debug, stop } = options
   commandArgs = command.split(" ")
   commandName = commandArgs.shift()
 
@@ -31,9 +31,9 @@ execute = (options)->
   worker = cp.spawn(commandName, commandArgs)
 
   # registering error
-  worker.stdout.on "error", error "givenCommand#{n}.stdout"
-  worker.stdin.on "error", error "givenCommand#{n}.stdin"
-  showStderr worker.stderr, "givenCommand#{n}", true
+  worker.stdout.on "error", error "givenCommand#{n}.stdout", stop
+  worker.stdin.on "error", error "givenCommand#{n}.stdin", stop
+  showStderr worker.stderr, "givenCommand#{n}", stop
 
   if tmpfile is "-"
     fwriter = process.stdout
@@ -95,5 +95,6 @@ if require.main is module
     hStart  : ap.opt("h")
     hEnd    : ap.opt("H")
     debug   : ap.opt("d", "debug")
+    stop    : ap.opt("stop")
 
   execute(op)
