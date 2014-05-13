@@ -40,10 +40,10 @@ sqd -c "samtools view -" -s bam input.bam
 
 options
 -------------
-- p: the number of processes
-- debug: debug mode (showing time, temporary files)
-- exit: exits when child processes emit an error or emit to stderr
-- s: (see separator section)
+- -p: the number of processes
+- --debug: debug mode (showing time, temporary files)
+- --exit: exits when child processes emit an error or emit to stderr
+- -s: (see separator section)
 
 separator
 -------------
