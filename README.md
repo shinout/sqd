@@ -16,7 +16,7 @@ $ npm install -g sqd
 usage
 -------------
 ```bash
-$ sqd -c command [--debug] [--exit] [-p #process] [-s separator_command] <input file> [output file]
+$ sqd -c command [--debug] [--exit] [-p nProcess] [-s separator_command] <input file> [output file]
 ```
 
 grep with 8 processes
