@@ -1,6 +1,6 @@
 {
   "name": "sqd",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "executing unix commands with multi processes",
   "main": "lib/sqd.js",
   "bin": {
@@ -28,9 +28,5 @@
     "grunt": "^0.4.4",
     "grunt-contrib-coffee": "^0.10.1"
   },
-  "license": "ISC",
-  "readme": "SQD\n==========\n- SQD: Simple Query Divider\n- SQD: SeQuential Distributor\n- SQD: Super-Quick Disposer\n- SQD: SQuiD-like multi-processor\n\nexecuting unix commands with multi processes\n\ninstallation\n----------------\n```bash\n$ npm install -g coffee-script #if you don't have one\n$ npm install -g sqd\n```\n\nusage\n-------------\n```bash\n$ sqd -c command [-p #process] [-s separator_command] <input file> [output file]\n```\n\ngrep with 8 processes\n\n```bash\nsqd -c \"grep -e something\" -p 8 input.txt\n```\nresults are on STDOUT.\n\n\nsed with 4 processes (default), results to output.txt\n\n```bash\nsqd -c \"sed -e y/ATCG/atcg/\" input.txt output.txt\n```\n\nwith separator option, we can also handle binary files\n```bash\nsqd -c \"samtools view -\" -s bam input.bam\n```\n",
-  "readmeFilename": "README.md",
-  "_id": "sqd@0.0.0",
-  "_from": "sqd@"
+  "license": "ISC"
 }

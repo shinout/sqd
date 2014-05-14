@@ -1,10 +1,5 @@
 SQD
 ==========
-- SQD: Simple Query Divider
-- SQD: SeQuential Distributor
-- SQD: Super-Quick Disposer
-- SQD: SQuiD-like multi-processor
-
 executing unix commands with multi processes
 
 installation
