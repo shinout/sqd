@@ -6,6 +6,9 @@ inflateRaw = require("zlib").inflateRaw
 require("termcolor").define
 
 module.exports = (bamfile, nProcess)->
+  verboseInfo =
+    bgzfheaders: {}
+
   size = (fs.statSync bamfile).size
   fails = []
 
@@ -26,7 +29,7 @@ module.exports = (bamfile, nProcess)->
     # finding accurate position of BGZF
     start = interval * k + offset-1
     buf = new Buffer(buflen)
-    fs.read fd, buf, 0, buflen, start
+    fs.readSync fd, buf, 0, buflen, start
     cursor = -1
     match = false
     until match or cursor + 16 > buf.length
@@ -38,6 +41,7 @@ module.exports = (bamfile, nProcess)->
           match = false
           break
 
+    verboseInfo.bgzfheaders[k] = bgzfheader.toString("hex")
     if match
       positions.push(start + cursor)
     else
@@ -50,6 +54,7 @@ module.exports = (bamfile, nProcess)->
   size     : size
   interval : interval
   fails    : if fails.length then fails else null
+  verbose  : verboseInfo
 
 if require.main is module
     n = Number process.argv[3]
