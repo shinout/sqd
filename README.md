@@ -57,4 +57,15 @@ the JSON keys are
 ```js
 "positions": [133, 271, 461, 631]
 ```
-- header: [0, 133]
+
+- header: range of the header section of the file, null when there is no header section
+
+```js
+"header": [0, 133]
+```
+
+- size: file size (optional)
+
+```js
+"size": 34503
+```

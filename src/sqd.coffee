@@ -49,9 +49,14 @@ main = (options)->
       console.error "after separator: %dms", new Date().getTime() - startTime
       console.error "[separation rules]"
       console.error JSON.stringify rule
+
     positions = rule.positions
+    throw new Error "invalid separator: no positions" unless positions.length
+    actualNProcess = positions.length
+    debug and console.error "separator separated the file into #{actualNProcess} while p is #{nProcess}"
+
     tmp.setGracefulCleanup()
-    for k in [0...nProcess]
+    for k in [0...actualNProcess]
       do (n = k)->
         tmp.tmpName (e, path)->
           if n isnt 0
@@ -63,7 +68,7 @@ main = (options)->
             tmpfile : if n is 0 then (if output then output else "-") else path # write to output file when n is 0
             command : command
             start   : positions[n]
-            end     : if n+1 isnt nProcess then positions[n+1]-1 else null
+            end     : if n+1 isnt actualNProcess then positions[n+1]-1 else null
             n       : n
             hStart  : rule.header?[0]
             hEnd    : rule.header?[1]
@@ -71,7 +76,7 @@ main = (options)->
             callback: ()->
               finishProcesses++
               debug and console.error "%d process(es) finished: %dms", finishProcesses, new Date().getTime() - startTime
-              if finishProcesses is nProcess
+              if finishProcesses is actualNProcess
                 if tmpfiles.length
                   cat = cp.spawn "cat", tmpfiles
                   wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
@@ -86,7 +91,7 @@ main = (options)->
                   wstream.on "close", ->
                     unlinkCounter = 1
                     cb = ->
-                      onClose() if ++unlinkCounter is nProcess
+                      onClose() if ++unlinkCounter is actualNProcess
                     fs.unlink tmpfile, cb for tmpfile in tmpfiles
                 else
                   onClose() if typeof onClose is "function"
