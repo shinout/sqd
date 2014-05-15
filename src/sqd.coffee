@@ -4,7 +4,15 @@ cp = require "child_process"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug, stop } = options
+  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug, stop, mem} = options
+  if mem
+    count = 0
+    interval = setInterval( ->
+      memory = process.memoryUsage()
+      console.error "[memory]", ++count, memory.rss, memory.heapTotal, memory.heapUsed
+    , 1000)
+  else
+    interval = null
 
   separator = "line" if not separator
   # if .js file is passed, execute it
@@ -79,7 +87,7 @@ main = (options)->
               if finishProcesses is actualNProcess
                 if tmpfiles.length
                   cat = cp.spawn "cat", tmpfiles
-                  wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1024 * 1024 * 1024 -1 else process.stdout
+                  wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1e7 else process.stdout
 
                   showStderr cat.stderr, "cat"
                   wstream.on "error", (e)-> error "outputStream", stop
@@ -91,6 +99,7 @@ main = (options)->
                   wstream.on "close", ->
                     unlinkCounter = 1
                     cb = ->
+                      clearInterval interval if interval
                       onClose() if ++unlinkCounter is actualNProcess
                     fs.unlink tmpfile, cb for tmpfile in tmpfiles
                 else
@@ -132,7 +141,7 @@ exports.run = ->
     .files(0)
     .arglen(1,2)
     .vals("c","command", "s", "sep")
-    .nonvals("w", "debug", "d", "e", "exit")
+    .nonvals("w", "debug", "d", "e", "exit", "mem")
     .defaults(p: 4)
     .parse()
   catch e
@@ -149,7 +158,7 @@ exports.run = ->
     console.error '[ERROR]: -c "<command>" is required'
     showUsage()
     process.exit(1)
-  
+
   startTime = new Date().getTime()
   debug = ap.opt("debug", "d")
 
@@ -163,6 +172,7 @@ exports.run = ->
     startTime     : startTime
     debug         : debug
     stop          : ap.opt("e", "exit")
+    mem           : ap.opt("mem")
     onClose       : ->
       debug and console.error "time: %dms", new Date().getTime() - startTime
   )

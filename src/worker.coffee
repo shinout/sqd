@@ -1,8 +1,8 @@
 fs = require "fs"
 cp = require "child_process"
 
-READ_HWM  = 1000000
-WRITE_HWM = 1024 * 1024 * 1024 -1
+READ_HWM  = 1e6
+WRITE_HWM = 1e8
 
 error = (streamName, exit)->
   return (e)->
