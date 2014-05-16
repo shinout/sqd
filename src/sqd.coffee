@@ -96,14 +96,20 @@ main = (options)->
 
                   cat.stdout.pipe wstream
 
-                  wstream.on "close", ->
+                  onExit = ->
                     unlinkCounter = 1
                     cb = ->
-                      clearInterval interval if interval
-                      onClose() if ++unlinkCounter is actualNProcess
+                      if ++unlinkCounter is actualNProcess
+                        clearInterval interval if interval
+                        onClose()
                     fs.unlink tmpfile, cb for tmpfile in tmpfiles
                 else
                   onClose() if typeof onClose is "function"
+
+                if wstream is process.stdout
+                  cat.on "close",  onExit
+                else
+                  wstream.on "close",  onExit
 
         )
 
