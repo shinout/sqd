@@ -1,10 +1,11 @@
 fs = require "fs"
 tmp = require "tmp"
 cp = require "child_process"
+worker = require "./worker.js"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, workerProcess, startTime, onClose, debug, stop, mem} = options
+  { input, output, command, separator, nProcess, startTime, onClose, debug, stop, mem} = options
   if mem
     count = 0
     interval = setInterval( ->
@@ -29,24 +30,6 @@ main = (options)->
     cp.exec sepCommand, (e, stdout, stderr)->
       separationRule = JSON.parse(stdout)
       run separationRule
-
-  if workerProcess
-    worker = (op)->
-      jsCommand = [
-        "node", __dirname+"/worker.js"
-        op.input
-        op.tmpfile
-        "-c","'#{op.command}'"
-        "-s", op.start
-        "-n", op.n
-      ]
-      jsCommand.push("-e",op.end) if op.end
-      jsCommand.push("-h", op.hStart) if op.hStart?
-      jsCommand.push("-H", op.hEnd) if op.hEnd?
-
-      cp.exec jsCommand.join(" "), op.callback
-  else
-    worker = require "./worker.js"
 
   # running commands as child processes
   tmpfiles = []
@@ -183,7 +166,6 @@ exports.run = ->
     nProcess      : ap.opt("p")
     command       : command
     separator     : ap.opt("sep", "s")
-    workerProcess : ap.opt("w")
     startTime     : startTime
     debug         : debug
     stop          : ap.opt("e", "exit")

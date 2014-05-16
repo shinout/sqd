@@ -75,27 +75,3 @@ execute = (options)->
     writer.once "drain", beginReadingBody
 
 module.exports = execute
-
-if require.main is module
-  # argument definition
-  ap = require("argparser")
-  .files(0)
-  .arglen(2,2)
-  .nums("n", "s", "e", "h", "H")
-  .vals("c")
-  .nonvals("debug", "d")
-  .parse()
-
-  op =
-    input   : ap.arg(0)
-    tmpfile : ap.arg(1)
-    command : ap.opt("c")
-    start   : ap.opt("s")
-    end     : ap.opt("e")
-    n       : ap.opt("n")
-    hStart  : ap.opt("h")
-    hEnd    : ap.opt("H")
-    debug   : ap.opt("d", "debug")
-    stop    : ap.opt("stop")
-
-  execute(op)
