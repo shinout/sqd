@@ -78,6 +78,7 @@ main = (options)->
             start   : positions[n]
             end     : if n+1 isnt actualNProcess then positions[n+1]-1 else null
             n       : n
+            debug   : debug
             hStart  : rule.header?[0]
             hEnd    : rule.header?[1]
             stop    : stop
@@ -93,7 +94,7 @@ main = (options)->
                   wstream.on "error", (e)-> error "outputStream", stop
                   cat.stdout.on "error", (e)-> error "cat.stdout", stop
                   cat.stdin.on "error", (e)-> error "cat.stdin", stop
-
+                  cat.on "error", (e)-> error "cat", stop
                   cat.stdout.pipe wstream
 
                   onExit = ->
@@ -103,6 +104,15 @@ main = (options)->
                         clearInterval interval if interval
                         onClose()
                     fs.unlink tmpfile, cb for tmpfile in tmpfiles
+
+                  if debug
+                    cat.on "exit", (code, signal)->
+                      console.error "cat onExit  code:#{code}, #{signal}"
+                    cat.on "close", (code, signal)->
+                      console.error "cat onClose  code:#{code}, #{signal}"
+                    cat.on "disconnect", (code, signal)->
+                      console.error "cat Disconnect"
+
                 else
                   onClose() if typeof onClose is "function"
 
@@ -110,7 +120,6 @@ main = (options)->
                   cat.on "close",  onExit
                 else
                   wstream.on "close",  onExit
-
         )
 
 error = (streamName, exit)->

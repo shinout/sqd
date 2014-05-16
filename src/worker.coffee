@@ -33,7 +33,16 @@ execute = (options)->
   # registering error
   worker.stdout.on "error", error "givenCommand#{n}.stdout", stop
   worker.stdin.on "error", error "givenCommand#{n}.stdin", stop
+  worker.on "error", error "givenCommand#{n}", stop
   showStderr worker.stderr, "givenCommand#{n}", stop
+
+  if debug
+    worker.on "exit", (code, signal)->
+      console.error "process #{n} onExit  code:#{code}, #{signal}"
+    worker.on "close", (code, signal)->
+      console.error "process #{n} onClose  code:#{code}, #{signal}"
+    worker.on "disconnect", (code, signal)->
+      console.error "process #{n} onDisconnect"
 
   if tmpfile is "-"
     fwriter = process.stdout
