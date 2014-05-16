@@ -1,8 +1,8 @@
 fs = require "fs"
 cp = require "child_process"
 
-READ_HWM  = 1e6
-WRITE_HWM = 1e8
+READ_HWM  = 1e5
+WRITE_HWM = 1e6
 
 error = (streamName, exit)->
   return (e)->
@@ -19,13 +19,14 @@ showStderr = (stderr, name, exit)->
     process.exit(1) if exit
 
 execute = (options)->
-  {input, tmpfile, command, start, end, n, hStart, hEnd, debug, stop } = options
+  {input, tmpfile, command, start, end, n, hStart, hEnd, debug, stop, rhwm, whwm } = options
   commandArgs = command.split(" ")
   commandName = commandArgs.shift()
+  highWaterMark_READ = if rhwm then Math.pow(10, rhwm) else READ_HWM
 
   rOptions =
     start : start
-    highWaterMark: READ_HWM
+    highWaterMark: highWaterMark_READ
   rOptions.end = end if end
 
   worker = cp.spawn(commandName, commandArgs)
@@ -49,7 +50,8 @@ execute = (options)->
     worker.stdout.on "end", options.callback if typeof options.callback is "function"
     worker.stdout.pipe fwriter, end: false
   else
-    fwriter = fs.createWriteStream tmpfile, highWaterMark: WRITE_HWM
+    highWaterMark_WRITE = if whwm then Math.pow(10, whwm) else WRITE_HWM
+    fwriter = fs.createWriteStream tmpfile, highWaterMark: highWaterMark_WRITE
     fwriter.on "close", options.callback if typeof options.callback is "function"
     worker.stdout.pipe fwriter
 

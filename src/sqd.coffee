@@ -5,7 +5,7 @@ worker = require "./worker.js"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, startTime, onClose, debug, stop, mem} = options
+  { input, output, command, separator, nProcess, startTime, onClose, debug, stop, mem, rhwm, whwm} = options
   if mem
     count = 0
     interval = setInterval( ->
@@ -64,6 +64,8 @@ main = (options)->
             debug   : debug
             hStart  : rule.header?[0]
             hEnd    : rule.header?[1]
+            rhwm    : rhwm
+            whwm    : whwm
             stop    : stop
             callback: ()->
               finishProcesses++
@@ -71,7 +73,7 @@ main = (options)->
               if finishProcesses is actualNProcess
                 if tmpfiles.length
                   cat = cp.spawn "cat", tmpfiles
-                  wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1e7 else process.stdout
+                  wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1e5 else process.stdout
 
                   showStderr cat.stderr, "cat"
                   wstream.on "error", (e)-> error "outputStream", stop
@@ -140,6 +142,7 @@ exports.run = ->
     .arglen(1,2)
     .vals("c","command", "s", "sep")
     .nonvals("w", "debug", "d", "e", "exit", "mem")
+    .nums("rhwm", "whwm")
     .defaults(p: 4)
     .parse()
   catch e
@@ -161,16 +164,18 @@ exports.run = ->
   debug = ap.opt("debug", "d")
 
   main(
-    input         : ap.arg(0)
-    output        : ap.arg(1)
-    nProcess      : ap.opt("p")
-    command       : command
-    separator     : ap.opt("sep", "s")
-    startTime     : startTime
-    debug         : debug
-    stop          : ap.opt("e", "exit")
-    mem           : ap.opt("mem")
-    onClose       : ->
+    input     : ap.arg(0)
+    output    : ap.arg(1)
+    nProcess  : ap.opt("p")
+    command   : command
+    separator : ap.opt("sep", "s")
+    startTime : startTime
+    debug     : debug
+    stop      : ap.opt("e", "exit")
+    mem       : ap.opt("mem")
+    whwm      : ap.opt("whwm")
+    rhwm      : ap.opt("rhwm")
+    onClose   : ->
       debug and console.error "time: %dms", new Date().getTime() - startTime
   )
 
