@@ -67,15 +67,7 @@ execute = (options)->
   # body
   beginReadingBody = ->
     freader = fs.createReadStream input, rOptions
-    #freader.pipe writer
-
-    freader.on "data", (chunk)->
-      writable = writer.write chunk
-      if not writable
-        freader.pause()
-        writer.once "drain", -> freader.resume()
-
-    freader.on "end", -> writer.end()
+    freader.pipe writer
 
   if ok
     beginReadingBody()
