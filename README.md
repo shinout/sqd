@@ -64,3 +64,15 @@ the JSON keys are
 ```js
 "size": 34503
 ```
+
+
+sqdm --much more memory
+----------------------
+```bash
+$ sqdm [memory=4000MB] -c command [--debug] [--exit] [-p nProcess] [-s separator_command] <input file> [output file]
+```
+
+sqd with 8000MB(≒8GB) memory
+```bash
+sqdm 8000 -c "cat" sample.txt
+```
