@@ -4,7 +4,7 @@
   "description": "executing unix commands with multi processes",
   "main": "lib/sqd.js",
   "bin": {
-    "sqd": "./bin/sqd"
+    "sqd": "./bin/sqd",
     "sqdm": "./bin/sqdm"
   },
   "repository": {
