@@ -65,6 +65,12 @@ the JSON keys are
 "size": 34503
 ```
 
+available separators
+----------------------
+- -s line: default. separate by line
+- -s bam:  see [SAM/BAM format specification](http://samtools.github.io/hts-specs/SAMv1.pdf)
+- -s fastq: see [fastq format](http://en.wikipedia.org/wiki/FASTQ_format)
+
 
 sqdm --much more memory
 ----------------------
