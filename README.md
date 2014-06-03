@@ -40,6 +40,19 @@ options
 - --exit: exits when child processes emit an error or emit to stderr
 - -s: (see separator section)
 
+additional environment variables in child processes
+-----------------------------------------------------
+Be careful that all values are parsed as string.
+
+- **sqd_n**:       process number named by sqd, differs among child processes
+- **sqd_start**:   start position of the file passed to the child process
+- **sqd_end**:     end position of the file passed to the child process
+- **sqd_command**: command string (common)
+- **sqd_input**:   input file name (common)
+- **sqd_tmpfile**: path to the tmpfile used in the child process
+- **sqd_debug**: debug mode or not. '1' or '0' (common)
+- **sqd_hStart:**: start position of the header (common)
+
 separator
 -------------
 sqd requires a separator which separates a given input file into multiple chunks.

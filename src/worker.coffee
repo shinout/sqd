@@ -29,7 +29,14 @@ execute = (options)->
     highWaterMark: highWaterMark_READ
   rOptions.end = end if end
 
-  worker = cp.spawn(commandName, commandArgs)
+  env = deepCopy process.env
+  for k,v of options when typeof v isnt "function"
+    if typeof v is "boolean"
+      env["sqd_" + k] = if v then "1" else "0"
+    else
+      env["sqd_" + k] = v
+
+  worker = cp.spawn(commandName, commandArgs, env: env)
 
   # registering error
   worker.stdout.on "error", error "givenCommand#{n}.stdout", stop
@@ -75,5 +82,13 @@ execute = (options)->
     beginReadingBody()
   else
     writer.once "drain", beginReadingBody
+
+# deepcopy val
+deepCopy = (val)->
+  return val.map(deepCopy)  if Array.isArray(val)
+  return val if typeof val isnt "object" or val is null or val is undefined
+  ret = {}
+  ret[attr] = deepCopy v for attr,v of val when val.hasOwnProperty attr
+  return ret
 
 module.exports = execute
