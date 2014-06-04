@@ -18,7 +18,6 @@ module.exports = (file, num)->
       key = null
       for line,k in lines
         if line is "+"
-          console.log line,k, lines.length
           key = k + 1
           break
 
