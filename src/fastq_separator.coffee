@@ -1,6 +1,6 @@
 fs = require "fs"
 MEAN_FQ_SIZE = 1000
-module.exports = (file, num)->
+module.exports = (file, num, cb)->
   size = (fs.statSync file).size
   interval = Math.floor(size/num)
   positions = [0]
@@ -29,9 +29,10 @@ module.exports = (file, num)->
 
       start += MEAN_FQ_SIZE
 
-  header   : null
-  footer   : null
-  positions: positions
+  cb null,
+    header   : null
+    footer   : null
+    positions: positions
 
 if require.main is module
     n = Number process.argv[3]

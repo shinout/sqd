@@ -5,7 +5,7 @@ BGZF_MEAN_LEN = 655360
 inflateRaw = require("zlib").inflateRaw
 require("termcolor").define
 
-module.exports = (bamfile, nProcess)->
+module.exports = (bamfile, nProcess, cb)->
   verboseInfo =
     bgzfheaders: {}
 
@@ -49,12 +49,14 @@ module.exports = (bamfile, nProcess)->
 
 
   fs.closeSync(fd)
-  header   : [0, offset]
-  positions: positions
-  size     : size
-  interval : interval
-  fails    : if fails.length then fails else null
-  verbose  : verboseInfo
+
+  cb null,
+    header   : [0, offset]
+    positions: positions
+    size     : size
+    interval : interval
+    fails    : if fails.length then fails else null
+    verbose  : verboseInfo
 
 if require.main is module
     n = Number process.argv[3]

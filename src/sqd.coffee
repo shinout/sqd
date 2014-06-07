@@ -20,9 +20,11 @@ main = (options)->
   separatorAsJS = "#{__dirname}/#{separator}_separator.js"
   if fs.existsSync separatorAsJS
     separationOpearator = require separatorAsJS
-    separationRule = separationOpearator input, nProcess
-    process.nextTick ->
-      run separationRule
+    separationOpearator input, nProcess, (err, separationRule)->
+      if err
+        throw err
+      else
+        process.nextTick -> run separationRule
 
   # if command is passed, execute it and parse the result
   else
