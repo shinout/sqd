@@ -31,6 +31,7 @@ sqd -c "sed -e y/ATCG/atcg/" input.txt output.txt
 with separator option, we can also handle binary files
 ```bash
 sqd -c "samtools view -" -s bam input.bam
+```
 
 reducing
 ```bash
