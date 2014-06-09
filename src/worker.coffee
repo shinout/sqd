@@ -35,6 +35,7 @@ execute = (options)->
       env["sqd_" + k] = if v then "1" else "0"
     else
       env["sqd_" + k] = v
+  env.sqd_map = "1"
 
   worker = cp.spawn(commandName, commandArgs, env: env)
 
@@ -52,8 +53,8 @@ execute = (options)->
     worker.on "disconnect", (code, signal)->
       console.error "process #{n} onDisconnect"
 
-  if tmpfile is "-"
-    fwriter = process.stdout
+  if tmpfile.writable
+    fwriter = tmpfile
     worker.stdout.on "end", options.callback if typeof options.callback is "function"
     worker.stdout.pipe fwriter, end: false
   else

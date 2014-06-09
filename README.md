@@ -31,6 +31,23 @@ sqd -c "sed -e y/ATCG/atcg/" input.txt output.txt
 with separator option, we can also handle binary files
 ```bash
 sqd -c "samtools view -" -s bam input.bam
+
+reducing
+```bash
+sqd -c "node foobar.js" sample.txt --reduce
+```
+
+in foobar.js
+```js
+if process.env.sqd_map
+  process.stdin.on("data", function(data) {
+    // do something, separated into multi processes
+  });
+else if process.env.sqd_reduce
+  process.stdin.on("data", function(data) {
+    // do somothing which reduces the results
+  });
+process.stdin.resume()
 ```
 
 options
@@ -39,6 +56,7 @@ options
 - --debug: debug mode (showing time, temporary files)
 - --exit: exits when child processes emit an error or emit to stderr
 - -s: (see separator section)
+- --reduce: reducing the results with the same command, which is given an environmental variable named **sqd_reduce** with value "1"
 
 additional environment variables in child processes
 -----------------------------------------------------

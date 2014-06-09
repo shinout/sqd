@@ -5,7 +5,7 @@ worker = require "./worker.js"
 
 # main operation
 main = (options)->
-  { input, output, command, separator, nProcess, startTime, onClose, debug, stop, mem, rhwm, whwm} = options
+  { input, output, command, separator, nProcess, startTime, onClose, debug, stop, mem, rhwm, whwm, reduce } = options
   if mem
     count = 0
     interval = setInterval( ->
@@ -48,6 +48,26 @@ main = (options)->
     actualNProcess = positions.length
     debug and console.error "separator separated the file into #{actualNProcess} while p is #{nProcess}"
 
+    # if reduce, spawning a child process as a reducer
+    reducer = null
+    finalWstream = null
+    if reduce
+      reducer = cp.spawn
+      commandArgs = command.split(" ")
+      commandName = commandArgs.shift()
+      env = {}
+      env[k] = v for k, v of process.env
+      for k,v of options when typeof v isnt "function"
+        if typeof v is "boolean"
+          env["sqd_" + k] = if v then "1" else "0"
+        else
+          env["sqd_" + k] = v
+      env.sqd_reduce = "1"
+      reducer = cp.spawn(commandName, commandArgs, env: env)
+      finalWstream = if output then fs.createWriteStream output, highWaterMark: 1e5 else process.stdout
+      reducer.stdout.pipe finalWstream
+      debug and console.error "spawning a child process as a reducer"
+
     tmp.setGracefulCleanup()
     for k in [0...actualNProcess]
       do (n = k)->
@@ -58,7 +78,7 @@ main = (options)->
 
           worker(
             input   : input
-            tmpfile : if n is 0 then (if output then output else "-") else path # write to output file when n is 0
+            tmpfile : if n is 0 then (if reducer then reducer.stdin else if output then output else process.stdout) else path # write to output file when n is 0
             command : command
             start   : positions[n]
             end     : if n+1 isnt actualNProcess then positions[n+1]-1 else null
@@ -75,7 +95,7 @@ main = (options)->
               if finishProcesses is actualNProcess
                 if tmpfiles.length
                   cat = cp.spawn "cat", tmpfiles
-                  wstream = if output then fs.createWriteStream output, flags: "a", highWaterMark: 1e5 else process.stdout
+                  wstream = if reducer then reducer.stdin else if output then fs.createWriteStream output, flags: "a", highWaterMark: 1e5 else process.stdout
 
                   showStderr cat.stderr, "cat"
                   wstream.on "error", (e)-> error "outputStream", stop
@@ -103,7 +123,9 @@ main = (options)->
                 else
                   onClose() if typeof onClose is "function"
 
-                if wstream is process.stdout
+                if finalWstream
+                  finalWstream.on "close", onExit
+                else if wstream is process.stdout
                   cat.on "close",  onExit
                 else
                   wstream.on "close",  onExit
@@ -128,7 +150,7 @@ showUsage = ->
   console.error """
 
   [USAGE]
-  \tsqd -c command [--debug] [--exit] [-p #process] [-s separator_command] <input file> [output file]
+  \tsqd -c command [--debug] [--exit] [-p #process] [-s separator_command] [--reduce] <input file> [output file]
 
   \tcommand:\t\t a unix command to be multiply executed from stream of the given input file
   \tseparator_command:\t command which gives a set of information of separation of the given input file.
@@ -143,7 +165,7 @@ exports.run = ->
     .files(0)
     .arglen(1,2)
     .vals("c","command", "s", "sep")
-    .nonvals("w", "debug", "d", "e", "exit", "mem")
+    .nonvals("w", "debug", "d", "e", "exit", "mem", "reduce")
     .nums("rhwm", "whwm")
     .defaults(p: 4)
     .parse()
@@ -177,6 +199,7 @@ exports.run = ->
     mem       : ap.opt("mem")
     whwm      : ap.opt("whwm")
     rhwm      : ap.opt("rhwm")
+    reduce    : ap.opt("reduce")
     onClose   : ->
       debug and console.error "time: %dms", new Date().getTime() - startTime
   )
