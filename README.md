@@ -40,14 +40,16 @@ sqd -c "node foobar.js" sample.txt --reduce
 
 in foobar.js
 ```js
-if process.env.sqd_map
+if (process.env.sqd_map) {
   process.stdin.on("data", function(data) {
     // do something, separated into multi processes
   });
-else if process.env.sqd_reduce
+}
+else if (process.env.sqd_reduce) {
   process.stdin.on("data", function(data) {
     // do somothing which reduces the results
   });
+}
 process.stdin.resume()
 ```
 
