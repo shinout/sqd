@@ -71,8 +71,10 @@ Be careful that all values are parsed as string.
 - **sqd_command**: command string (common)
 - **sqd_input**:   input file name (common)
 - **sqd_tmpfile**: path to the tmpfile used in the child process
-- **sqd_debug**: debug mode or not. '1' or '0' (common)
+- **sqd_debug**:   debug mode or not. '1' or '0' (common)
 - **sqd_hStart:**: start position of the header (common)
+- **sqd_map:**:    "1", unless it is spawned for reducing. undefined, otherwise
+- **sqd_reduce:**: "1", if it is spawned for reducing. undefined, otherwise
 
 separator
 -------------
